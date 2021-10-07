@@ -1,21 +1,23 @@
 package org.example;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class LoginTest {
     public static LoginPage loginPage;
     public static ProfilePage profilePage;
     public static WebDriver driver;
-
+    public static Mail email;
     /**
      * осуществление первоначальной настройки
      */
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         //определение пути до драйвера и его настройка
         System.setProperty("webdriver.chrome.driver", ConfProperties.getProperty("chromedriver"));
@@ -23,6 +25,7 @@ public class LoginTest {
         driver = new ChromeDriver();
         loginPage = new LoginPage(driver);
         profilePage = new ProfilePage(driver);
+        email = new Mail(driver);
         //окно разворачивается на полный экран
         driver.manage().window().maximize();
         //задержка на выполнение теста = 10 сек.
@@ -46,13 +49,20 @@ public class LoginTest {
         //нажимаем кнопку входа
         loginPage.clickLoginBtn();
         //получаем отображаемый логин
+        profilePage.entryMenu();
+        profilePage.entryMail();
+        driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+        email.clickProfile();
+        email.returnToProfile();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         String user = profilePage.getUserLogin();
         //и сравниваем его с логином из файла настроек
-        Assert.assertEquals(ConfProperties.getProperty("login"), user); }
+        assertEquals(ConfProperties.getProperty("login"), user);
+    }
     /**
      * осуществление выхода из аккаунта с последующим закрытием окна браузера
      */
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         profilePage.entryMenu();
         profilePage.userLogout();

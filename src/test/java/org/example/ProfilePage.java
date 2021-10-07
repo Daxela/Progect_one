@@ -26,9 +26,11 @@ public class ProfilePage {
      * метод для получения имени пользователя из меню пользователя
      */
 
-    @FindBy(xpath = "//*[contains(@class,'personal-info-login__text personal-info-login__text_decorated']]")
-
+    @FindBy(xpath = "//*[contains(@class,'personal-info-login__text personal-info-login__text_decorated')]")
     WebElement userLogin;
+
+    @FindBy(xpath = "//*[contains(@class,'menu__item menu__item_type_link legouser__menu-item legouser__menu-item_action_mail')]")
+    private WebElement mail;
 
     public String getUserLogin() {
         String userName = userLogin.getText();
@@ -42,4 +44,10 @@ public class ProfilePage {
      * метод для нажатия кнопки выхода из аккаунта
      */
     public void userLogout() {
-        logoutBtn.click(); } }
+        logoutBtn.click();
+    }
+
+    public void entryMail(){
+        mail.click();
+    }
+}
